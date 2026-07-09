@@ -1,4 +1,4 @@
-import { Droplets, Facebook, Instagram, Linkedin, Youtube, Phone, MapPin, Mail } from "lucide-react";
+import { Droplets, Globe, Camera, Briefcase, Play, Phone, MapPin, Mail } from "lucide-react";
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -38,8 +38,13 @@ export function Footer() {
             Hyderabad's trusted waterproofing specialists. Premium materials, expert crews, warranty-backed work.
           </p>
           <div className="mt-5 flex gap-2">
-            {[Facebook, Instagram, Linkedin, Youtube].map((I, i) => (
-              <a key={i} href="#" aria-label="social" className="w-9 h-9 rounded-full bg-white/10 hover:bg-brand-cyan flex items-center justify-center transition-colors">
+            {[
+              { I: Globe, l: "Facebook" },
+              { I: Camera, l: "Instagram" },
+              { I: Briefcase, l: "LinkedIn" },
+              { I: Play, l: "YouTube" },
+            ].map(({ I, l }) => (
+              <a key={l} href="#" aria-label={l} className="w-9 h-9 rounded-full bg-white/10 hover:bg-brand-cyan flex items-center justify-center transition-colors">
                 <I className="w-4 h-4" />
               </a>
             ))}
