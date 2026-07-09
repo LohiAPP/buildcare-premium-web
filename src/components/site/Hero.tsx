@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
 import { ArrowRight, Phone, ShieldCheck, Clock, Wrench, Users } from "lucide-react";
 import heroImg from "@/assets/hero.jpg";
 
@@ -9,9 +10,43 @@ const badges = [
   { icon: Users, label: "Professional Team" },
 ];
 
+const words = ["Waterproofing", "Protection", "Restoration", "Maintenance"];
+
 export function Hero() {
+  const [currentText, setCurrentText] = useState("");
+  const [wordIndex, setWordIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const currentWord = words[wordIndex];
+    let timeoutId: NodeJS.Timeout;
+
+    if (isDeleting) {
+      if (currentText === "") {
+        setIsDeleting(false);
+        setWordIndex((prev) => (prev + 1) % words.length);
+      } else {
+        timeoutId = setTimeout(() => {
+          setCurrentText(currentWord.slice(0, currentText.length - 1));
+        }, 50);
+      }
+    } else {
+      if (currentText === currentWord) {
+        timeoutId = setTimeout(() => {
+          setIsDeleting(true);
+        }, 2000);
+      } else {
+        timeoutId = setTimeout(() => {
+          setCurrentText(currentWord.slice(0, currentText.length + 1));
+        }, 100);
+      }
+    }
+
+    return () => clearTimeout(timeoutId);
+  }, [currentText, isDeleting, wordIndex]);
+
   return (
-    <section id="home" className="relative min-h-screen flex items-center overflow-hidden">
+    <section id="home" className="relative z-0 min-h-screen flex items-center overflow-hidden">
       {/* Background image */}
       <div className="absolute inset-0 -z-10">
         <img
@@ -59,13 +94,27 @@ export function Hero() {
         >
           Permanent{" "}
           <span className="relative inline-block">
-            <span className="bg-gradient-to-r from-brand-sky to-white bg-clip-text text-transparent">
-              Waterproofing
+            <span className="bg-gradient-to-r from-brand-sky to-white bg-clip-text text-transparent inline-block">
+              {currentText}
             </span>
-            <svg className="absolute -bottom-2 left-0 w-full" height="8" viewBox="0 0 300 8" fill="none">
-              <path d="M2 6 Q75 -2 150 4 T298 4" stroke="url(#g)" strokeWidth="3" strokeLinecap="round" fill="none"/>
+            <motion.span
+              animate={{ opacity: [1, 0] }}
+              transition={{ repeat: Infinity, duration: 0.8, ease: "linear" }}
+              className="inline-block w-[3px] h-[0.9em] bg-brand-sky ml-1 align-baseline translate-y-[0.1em]"
+            />
+            <motion.svg
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+              className="absolute -bottom-2 left-0 w-full origin-left"
+              height="8"
+              viewBox="0 0 300 8"
+              fill="none"
+              preserveAspectRatio="none"
+            >
+              <path d="M2 6 Q75 -2 150 4 T298 4" stroke="url(#g)" strokeWidth="3" strokeLinecap="round" fill="none" vectorEffect="non-scaling-stroke"/>
               <defs><linearGradient id="g"><stop stopColor="#29B6F6"/><stop offset="1" stopColor="#0088FF"/></linearGradient></defs>
-            </svg>
+            </motion.svg>
           </span>{" "}
           Solutions in Hyderabad
         </motion.h1>
